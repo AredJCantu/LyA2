@@ -1,0 +1,123 @@
+﻿<Window x:Class="ProyectoUnidad1.Views.VistaPrincipal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProyectoUnidad1.Views"
+        mc:Ignorable="d"
+        Title="VistaPrincipal" Height="450" Width="800">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <!-- Barra de Herramientas / Botones -->
+            <RowDefinition Height="Auto"/>
+            <!-- Editor de Código -->
+            <RowDefinition Height="*"/>
+            <!-- Splitter para redimensionar -->
+            <RowDefinition Height="Auto"/>
+            <!-- Tabla de Errores -->
+            <RowDefinition Height="200"/>
+        </Grid.RowDefinitions>
+
+        <!-- 1. BARRA DE BOTONES -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+            <Button Content="▶ Analizar Código" 
+                    Command="{Binding AnalyzeCommand}"
+                    Background="#007ACC" Foreground="White" FontWeight="Bold" 
+                    Padding="15,8" Margin="0,0,10,0" BorderThickness="0"/>
+
+            <Button Content="🗑 Limpiar Todo" 
+                    Command="{Binding ClearCommand}"
+                    Background="#333333" Foreground="White" 
+                    Padding="15,8" Margin="0,0,10,0" BorderThickness="0"/>
+        </StackPanel>
+
+        <!-- 2. EDITOR DE CÓDIGO (MULTILÍNEA) -->
+        <Grid Grid.Row="1" Margin="0,0,0,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Código SetLang:" Foreground="#CCCCCC" FontWeight="SemiBold" Margin="0,0,0,5"/>
+
+            <TextBox Grid.Row="1"
+                     Text="{Binding CodeInput, UpdateSourceTrigger=PropertyChanged}"
+                     AcceptsReturn="True"
+                     AcceptsTab="True"
+                     TextWrapping="NoWrap"
+                     VerticalScrollBarVisibility="Auto"
+                     HorizontalScrollBarVisibility="Auto"
+                     FontFamily="Consolas"
+                     FontSize="14"
+                     Background="#252526"
+                     Foreground="#DCDCDC"
+                     CaretBrush="White"
+                     Padding="10"
+                     BorderBrush="#3F3F46"/>
+        </Grid>
+
+        <!-- SEPARADOR AJUSTABLE -->
+        <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch" Background="#333333" Margin="0,2"/>
+
+        <!-- 3. TABLA DE ERRORES SEMÁNTICOS -->
+        <Grid Grid.Row="3" Margin="0,5,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Tabla de Errores Semánticos:" Foreground="#CCCCCC" FontWeight="SemiBold" Margin="0,0,0,5"/>
+
+            <DataGrid Grid.Row="1"
+                      ItemsSource="{Binding ErrorList}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      GridLinesVisibility="Horizontal"
+                      HorizontalGridLinesBrush="#3F3F46"
+                      Background="#252526"
+                      RowBackground="#1E1E1E"
+                      AlternatingRowBackground="#252526"
+                      Foreground="White"
+                      BorderBrush="#3F3F46"
+                      HeadersVisibility="Column">
+
+                <!-- Estilo de encabezados -->
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#333333"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="Padding" Value="8,5"/>
+                        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                        <Setter Property="BorderBrush" Value="#3F3F46"/>
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+
+                <!-- Columnas mapeadas con SemanticError -->
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="No." Binding="{Binding Number}" Width="50">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="Tipo de Error" Binding="{Binding Type}" Width="160"/>
+
+                    <DataGridTextColumn Header="Descripción" Binding="{Binding Description}" Width="*"/>
+
+                    <DataGridTextColumn Header="Línea" Binding="{Binding Line}" Width="70">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="Foreground" Value="#FF6B6B"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>
